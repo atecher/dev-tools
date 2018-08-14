@@ -77,7 +77,7 @@ public class StoreConfig{
 
         this.i_service_path =storePath+ "/entity_service/"+database;
 
-        this.xml_path = storePath+"~/cg/entity_mapper/"+database;
+        this.xml_path = storePath+"/entity_mapper/"+database;
 
         this.bean_package = base_package+".domain";
 

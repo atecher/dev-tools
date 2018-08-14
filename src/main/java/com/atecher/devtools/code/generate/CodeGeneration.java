@@ -54,11 +54,6 @@ public class CodeGeneration {
     private StoreConfig storeConfig;
     private DBDriver driver;
 
-
-
-
-
-
     /**
      *  获取所有的表 or 配置要生成的表
      * @return
@@ -81,7 +76,7 @@ public class CodeGeneration {
             sb.append(temp.substring(0, 1).toUpperCase()).append(temp.substring(1));
         }
         beanName = sb.toString();
-        mapperName = storeConfig.getMapper_package()+"."+beanName + "Dao";
+        mapperName = storeConfig.getMapper_package()+"."+beanName + "Mapper";
     }
 
 
@@ -322,7 +317,7 @@ public class CodeGeneration {
             folder.mkdirs();
         }
 
-        File beanFile = new File(storeConfig.getMapper_path(), beanName + "Dao.java");
+        File beanFile = new File(storeConfig.getMapper_path(), beanName + "Mapper.java");
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(beanFile)));
         bw.write("package " + storeConfig.getMapper_package() + ";");
         bw.newLine();
@@ -342,7 +337,7 @@ public class CodeGeneration {
 
         bw = buildClassComment(bw, tableComment);
         bw.newLine();
-        bw.write("public interface " + beanName + "Dao {");
+        bw.write("public interface " + beanName + "Mapper {");
         bw.newLine();
         bw.newLine();
 
@@ -496,7 +491,7 @@ public class CodeGeneration {
         bw.newLine();
         bw.write("import javax.annotation.Resource;");
         bw.newLine();
-        bw.write("import " + storeConfig.getMapper_package() + "." + beanName + "Dao;");
+        bw.write("import " + storeConfig.getMapper_package() + "." + beanName + "Mapper;");
         bw.newLine();
         bw.write("import " + storeConfig.getI_service_package() + "." + i_className+";");
         bw.newLine();
@@ -516,8 +511,8 @@ public class CodeGeneration {
         bw.newLine();
         bw.newLine();
         bw.write("\t@Resource");bw.newLine();
-        String daoName = processResultMapId2(beanName)+"Dao";
-        bw.write("\tprivate "+beanName+"Dao "+daoName+";");bw.newLine();
+        String daoName = processResultMapId2(beanName)+"Mapper";
+        bw.write("\tprivate "+beanName+"Mapper "+daoName+";");bw.newLine();
         bw.newLine();
         bw.write("\t@Override");bw.newLine();
         bw.write("\tpublic " + beanName + " selectByPrimaryKey("+processType(types.get(0))+" id) {");

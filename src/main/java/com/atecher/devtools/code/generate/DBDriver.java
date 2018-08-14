@@ -27,6 +27,7 @@ public class DBDriver{
     private String password;
     private Connection conn;
 
+
     public Connection getConncetion(){
         String url="jdbc:mysql://"+ip+":"+(port==null?"3306":port)+"/" + datebase + "?characterEncoding=utf8";
 
