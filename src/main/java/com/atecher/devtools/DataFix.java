@@ -39,6 +39,11 @@ public class DataFix {
                   couponDetailSize++;
                   BigDecimal discountPrice = item.getBigDecimal("discountPrice");
                   BigDecimal productPayPrice = discountPrice.multiply(item.getBigDecimal("productNum"));
+                  if(item.getBoolean("useGoodCoupon")){
+                      productPayPrice=productPayPrice.subtract(discountPrice);
+                  }
+                  String productId = item.getString("productId");
+                  priceMap.put(productId, productPayPrice);
                   totalCouponPrice=totalCouponPrice.add(productPayPrice);
               }
         }
@@ -50,6 +55,9 @@ public class DataFix {
                 BigDecimal discountPrice = item.getBigDecimal("discountPrice");
                 String productId = item.getString("productId");
                 BigDecimal productPayPrice = discountPrice.multiply(item.getBigDecimal("productNum"));
+                if(item.getBoolean("useGoodCoupon")){
+                    productPayPrice=productPayPrice.subtract(discountPrice);
+                }
                 // 单品总价占优惠券金额的多少
                 if (item.getBoolean("useCoupon")) {
                     BigDecimal ratioPrice = productPayPrice.multiply(couponPrice).divide(totalCouponPrice, 2, BigDecimal.ROUND_DOWN);
@@ -119,7 +127,7 @@ public class DataFix {
     public static List<JSONObject> orderList() throws IOException {
         List<String> strings = FileUtils.readLines(new File("/Users/mark/order.txt"), "utf-8");
         List<JSONObject> collect = strings.stream().map(s -> {
-            String[] split = s.split("=");
+            String[] split = s.split("====");
             JSONObject item = new JSONObject();
             item.put("orderId", split[0]);
             item.put("payPrice", new BigDecimal(split[1]));
@@ -146,7 +154,10 @@ public class DataFix {
             item.put("discountPrice", discountPrice);
             BigDecimal productPayPrice = new BigDecimal(split[5]);
             item.put("productPayPrice", productPayPrice);
-            item.put("useCoupon", !((discountPrice.multiply(new BigDecimal(productNum))).compareTo(productPayPrice) == 0));
+            item.put("useCoupon", true);
+            item.put("useGoodCoupon",split[1].equals("blg-t1"));
+
+
 //            System.out.println(item.toJSONString());
             return item;
         }).collect(Collectors.toList());
@@ -170,19 +181,19 @@ public class DataFix {
 
 
     public static Map<String, BigDecimal> couponMap() throws IOException {
-        List<String> strings = FileUtils.readLines(new File("/Users/mark/coupon.txt"), "utf-8");
-        List<JSONObject> collect = strings.stream().map(s -> {
-            JSONObject item = JSON.parseObject(s);
-            return item;
-        }).collect(Collectors.toList());
+//        List<String> strings = FileUtils.readLines(new File("/Users/mark/coupon.txt"), "utf-8");
+//        List<JSONObject> collect = strings.stream().map(s -> {
+//            JSONObject item = JSON.parseObject(s);
+//            return item;
+//        }).collect(Collectors.toList());
         Map<String, BigDecimal> detailListMap = new HashMap<>();
-        for (JSONObject item : collect) {
-            String couponUserId = item.getString("couponUserId");
-            BigDecimal val = item.getBigDecimal("val");
-
-            detailListMap.put(couponUserId, val);
-        }
-
+//        for (JSONObject item : collect) {
+//            String couponUserId = item.getString("couponUserId");
+//            BigDecimal val = item.getBigDecimal("val");
+//
+//            detailListMap.put(couponUserId, val);
+//        }
+        detailListMap.put("454164",new BigDecimal("5.53"));
 //        System.out.println(JSON.toJSONString(detailListMap));
         return detailListMap;
 
